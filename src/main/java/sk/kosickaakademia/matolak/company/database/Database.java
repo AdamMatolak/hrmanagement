@@ -5,9 +5,9 @@ import sk.kosickaakademia.matolak.company.log.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class Database {
@@ -59,5 +59,33 @@ public class Database {
             }
         }
         return false;
+    }
+
+    public List<User> getFemales(){
+        String sql = "SELECT * FROM user WHERE gender = 1";
+        try{
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            return executeSelect(ps);
+        }catch (Exception ex){
+            log.error(ex.toString());
+        }
+        return null;
+    }
+    public List<User> getMales(){
+        return null;
+    }
+    public List<User> getUsersByAge(int from, int to){
+        return null;
+    }
+    private List<User> executeSelect(PreparedStatement ps) throws SQLException{
+        ResultSet rs = ps.executeQuery();
+        List<User> list = new ArrayList<>();
+        while (rs.next()){
+            String fname = rs.getString("fname");
+            String lname = rs.getString("lname");
+            int age = rs.getInt("age");
+            int id = rs.getInt("id");
+            int gender = rs.getInt("gender");
+        }
     }
 }
