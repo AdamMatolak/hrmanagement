@@ -13,8 +13,7 @@ import java.util.Properties;
 public class Database {
 
     Log log = new Log();
-    private final String INSERTQUERY ="INSERT INTO user (fname, lname, age, gender) " +
-            " VALUES (?, ?, ?, ?)";
+    private final String INSERTQUERY ="INSERT INTO user (fname, lname, age, gender) " + " VALUES (?, ?, ?, ?)";
     public Connection getConnection(){
         try {
             Properties props = new Properties();
@@ -60,7 +59,6 @@ public class Database {
         }
         return false;
     }
-
     public List<User> getFemales(){
         String sql = "SELECT * FROM user WHERE gender = 1";
         try{
@@ -72,20 +70,45 @@ public class Database {
         return null;
     }
     public List<User> getMales(){
+        String sql = "SELECT * FROM user WHERE gender=0";
+        try{
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            return executeSelect(ps);
+        }catch (Exception ex){
+            log.error(ex.toString());
+        }
         return null;
     }
     public List<User> getUsersByAge(int from, int to){
+        if (to<from){
+            return null;
+        }
+        try{
+            String sql = "SELECT * FROM user WHERE age >= ? AND age <= ?";
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.setInt(1,from);
+            ps.setInt(2, to);
+            return executeSelect(ps);
+        }catch (Exception ex){
+            log.error(ex.toString());
+        }
         return null;
     }
     private List<User> executeSelect(PreparedStatement ps) throws SQLException{
         ResultSet rs = ps.executeQuery();
         List<User> list = new ArrayList<>();
+        int count = 0;
         while (rs.next()){
+            count ++;
             String fname = rs.getString("fname");
             String lname = rs.getString("lname");
             int age = rs.getInt("age");
             int id = rs.getInt("id");
             int gender = rs.getInt("gender");
+            User u=new User(id,fname,lname,age,gender);
+            list.add(u);
         }
+        System.out.println("Number of records: " + count);
+        return list;
     }
 }

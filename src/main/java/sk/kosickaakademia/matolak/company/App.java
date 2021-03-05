@@ -9,10 +9,9 @@ import java.util.List;
 public class App 
 {
     public static void main(String[] args) {
-        System.out.println("Hello world");
         Database db=new Database();
-        db.insertNewUser(new User("Roman","Banik",35, 0));
-        List<User> list = db.getMales();
-        System.out.println(list);
+        List<User> list = db.getUsersByAge(10,35);
+        for(User u:list)
+            System.out.println(u.toString());
     }
 }
