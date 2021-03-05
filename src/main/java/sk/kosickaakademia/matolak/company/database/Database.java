@@ -2,6 +2,7 @@ package sk.kosickaakademia.matolak.company.database;
 
 import sk.kosickaakademia.matolak.company.entity.User;
 import sk.kosickaakademia.matolak.company.log.Log;
+import sk.kosickaakademia.matolak.company.util.Util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,12 +42,17 @@ public class Database {
         }
     }
     public boolean insertNewUser(User user){
+        if (user==null){
+            return false;
+        }
+        String fname = new Util().normalizeName(user.getFname());
+        String lname = new Util().normalizeName(user.getLname());
         Connection con = getConnection();
         if (con!=null){
             try {
                 PreparedStatement ps = con.prepareStatement(INSERTQUERY);
-                ps.setString(1,user.getFname());
-                ps.setString(2,user.getLname());
+                ps.setString(1,fname);
+                ps.setString(2,lname);
                 ps.setInt(3,user.getAge());
                 ps.setInt(4,user.getGender().getValue());
                 int result = ps.executeUpdate();
@@ -110,5 +116,34 @@ public class Database {
         }
         System.out.println("Number of records: " + count);
         return list;
+    }
+    public List<User> getAllUsers(){
+
+        String sql = "SELECT * FROM user";
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            return executeSelect(ps);
+        }catch(Exception ex){
+            log.error(ex.toString());
+        }
+        return null;
+    }
+    public User getUserById(int id){
+
+        String sql = "SELECT * FROM user WHERE id = ?";
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.setInt(1,id);
+            List<User> list = executeSelect(ps);
+            if(list.isEmpty()) {
+                return null;
+            }
+            else {
+                list.get(0);
+            }
+        }catch(Exception ex){
+            log.error(ex.toString());
+        }
+        return null;
     }
 }

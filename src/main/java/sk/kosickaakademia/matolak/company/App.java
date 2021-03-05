@@ -12,7 +12,7 @@ public class App
     public static void main(String[] args) {
         Database db=new Database();
         List<User> list = db.getUsersByAge(10,35);
-        for(User u:list)
-            System.out.println(new Util().getJson(u));
+
+
     }
 }

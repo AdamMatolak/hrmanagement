@@ -1,5 +1,6 @@
 package sk.kosickaakademia.matolak.company.util;
 
+import org.graalvm.compiler.lir.LIRInstruction;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import sk.kosickaakademia.matolak.company.entity.User;
@@ -15,7 +16,25 @@ public class Util {
             { "datetime":"1254-12-25..." , "size":1 , "users":[ { },{ },{ },{ } ] }
 
          */
-        return null;
+        if (list.isEmpty()) return "{}";
+
+        JSONObject object = new JSONObject();
+        object.put("datetime",getCurrentDateTime());
+        object.put("size",1);
+        JSONArray jsonArray = new JSONArray();
+        for (User u : list){
+            JSONObject userJson = new JSONObject();
+            userJson.put("id",u.getId());
+            userJson.put("fname",u.getFname());
+            userJson.put("lname",u.getLname());
+            userJson.put("age",u.getAge());
+            userJson.put("gender",u.getGender().toString());
+            jsonArray.add(userJson);
+
+        }
+        object.put("users",jsonArray);
+
+        return object.toJSONString();
     }
     public String getJson(User user){
         /*  ak user==null   { }
@@ -46,6 +65,9 @@ public class Util {
     }
     public String normalizeName(String name){
         //ĎOĎO -> Ďoďo
-        return name;
+        if (name==null||name.equals("")){
+            return " ";
+        }
+        return Character.toUpperCase(name.charAt(0))+name.substring(1).toLowerCase();
     }
 }
