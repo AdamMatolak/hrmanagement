@@ -26,7 +26,7 @@ public class Database {
             Connection con = DriverManager.getConnection(url, username, password);
             log.print("Connection: success!");
             return con;
-        }catch (SQLException | IOException ex){
+        }catch (Exception ex){
             log.error(ex.toString());
         }
         return(null);
@@ -66,10 +66,13 @@ public class Database {
         return false;
     }
     public List<User> getFemales(){
+        log.info("Executing: getFemales()");
         String sql = "SELECT * FROM user WHERE gender = 1";
-        try{
-            PreparedStatement ps = getConnection().prepareStatement(sql);
-            return executeSelect(ps);
+        try(Connection con = getConnection()){
+            if (con!=null){
+                PreparedStatement ps = getConnection().prepareStatement(sql);
+                return executeSelect(ps);
+            }
         }catch (Exception ex){
             log.error(ex.toString());
         }
@@ -114,7 +117,7 @@ public class Database {
             User u=new User(id,fname,lname,age,gender);
             list.add(u);
         }
-        System.out.println("Number of records: " + count);
+        log.info("Number of records: " + count);
         return list;
     }
     public List<User> getAllUsers(){
@@ -144,6 +147,12 @@ public class Database {
         }catch(Exception ex){
             log.error(ex.toString());
         }
+        return null;
+    }
+    public boolean changeAge(int id, int newAge){
+        return false;
+    }
+    public List<User> getUser(String pattern){
         return null;
     }
 }

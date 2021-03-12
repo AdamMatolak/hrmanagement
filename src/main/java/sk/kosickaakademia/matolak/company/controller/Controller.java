@@ -67,6 +67,6 @@ public class Controller {
     public ResponseEntity<String> getAllUsers(){
         List<User> list = new Database().getAllUsers();
         String json = new Util().getJson(list);
-        return ResponseEntity.status(201).contentType(MediaType.APPLICATION_JSON)
+        return ResponseEntity.status(201).contentType(MediaType.APPLICATION_JSON).body(json);
     }
 }
