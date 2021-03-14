@@ -6,10 +6,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sk.kosickaakademia.matolak.company.database.Database;
 import sk.kosickaakademia.matolak.company.entity.User;
 import sk.kosickaakademia.matolak.company.enumerator.Gender;
@@ -68,5 +65,21 @@ public class Controller {
         List<User> list = new Database().getAllUsers();
         String json = new Util().getJson(list);
         return ResponseEntity.status(201).contentType(MediaType.APPLICATION_JSON).body(json);
+    }
+
+    @GetMapping("/users/{gender}")
+    public ResponseEntity<String> getUsersByGender(@PathVariable String gender){
+        if(gender=="male"){
+            List<User> list=new Database().getMales();
+            String json = new Util().getJson(list);
+            return ResponseEntity.status(201).contentType(MediaType.APPLICATION_JSON).body(json);
+        }
+        else if(gender=="female"){
+            List<User> list = new Database().getFemales();
+            String json = new Util().getJson(list);
+            return ResponseEntity.status(201).contentType(MediaType.APPLICATION_JSON).body(json);
+        }else {
+            return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body(null);
+        }
     }
 }
