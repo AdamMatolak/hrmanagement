@@ -14,7 +14,15 @@ import java.util.Properties;
 public class Database {
 
     Log log = new Log();
-    private final String INSERTQUERY ="INSERT INTO user (fname, lname, age, gender) " + " VALUES (?, ?, ?, ?)";
+    private final String query="INSERT INTO user (fname, lname, age, gender) VALUES ( ?, ?, ?, ?)";
+    private final String female="SELECT * FROM user WHERE gender = 1";
+    private final String male="SELECT * FROM user WHERE gender = 0";
+    private final String other="SELECT * FROM user WHERE gender = 2";
+    private final String usersId="SELECT * FROM user WHERE id = ?";
+    private final String userPattern="SELECT * FROM user WHERE (fname, lname) = ?";
+    private final String allUsers="SELECT * FROM user ";
+    private final String newUserAge = "UPDATE user SET age = ? WHERE id = ?";
+    private final String usersByAge ="SELECT * FROM user WHERE age >= ? AND age <= ?";
     public Connection getConnection(){
         try {
             Properties props = new Properties();
@@ -50,7 +58,7 @@ public class Database {
         Connection con = getConnection();
         if (con!=null){
             try {
-                PreparedStatement ps = con.prepareStatement(INSERTQUERY);
+                PreparedStatement ps = con.prepareStatement(query);
                 ps.setString(1,fname);
                 ps.setString(2,lname);
                 ps.setInt(3,user.getAge());
@@ -150,9 +158,31 @@ public class Database {
         return null;
     }
     public boolean changeAge(int id, int newAge){
+        if (id < 0 || newAge < 1 || newAge >= 100)
+            return false;
+        try (Connection conn=getConnection()){
+            if (conn != null) {
+                PreparedStatement ps = conn.prepareStatement(newUserAge);
+                ps.setInt(1, newAge);
+                ps.setInt(2, id);
+                int update=ps.executeUpdate();
+                log.print("Updated age for id: " + id);
+                return update==1;
+            }
+        } catch (Exception e) {
+            log.error(e.toString());
+        }
         return false;
     }
     public List<User> getUser(String pattern){
+        try (Connection conn = getConnection()) {
+            if (conn != null) {
+                PreparedStatement ps = conn.prepareStatement(userPattern);
+                return executeSelect(ps);
+            }
+        }catch(Exception ex) {
+        }
         return null;
     }
+
 }
