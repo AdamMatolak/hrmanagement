@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>My second server</title>
+</head>
+<body>
+    <div>
+        <form class="verticalCenter" method="GET" action="process.html">
+            <table class="horizontalCenter">
+                <tr>
+                    <td class="textColor">
+                        First name:
+                    </td>
+                    <td>
+                        <input class="inputs" type="text" id="fname" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="textColor">
+                        Last name:
+                    </td>
+                    <td>
+                        <input class="inputs" type="text" id="lname" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="textColor">
+                        Age:
+                    </td>
+                    <td>
+                        <input class="inputs" type="text" id="age" min="1" max="99" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="textColor">
+                        Gender:
+                    </td>
+                    <td>
+                        <select class="inputs" id="gender">
+                            <option value="empty"></option>
+                            <option value="m">Male</option>
+                            <option value="f">Female</option>
+                            <option value="o">Other</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input class="buttons" type="reset" value="Reset">
+                    </td>
+                    <td>
+                        <input class="buttons" type="button" value="Add User" onclick="send()">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <script type="text/javascript">
+        function send(){
+            const fname=document.getElementById('fname').value;
+            const lname=document.getElementById('lname').value;
+            const age=document.getElementById('age').value;
+            const gender=document.getElementById('gender').value;
+            //console.log(fname, lname, age, gender);
+            const person = new Object();
+            person.fname = fname;
+            person.lname = lname;
+            person.age = age;
+            person.gender = gender;
+            const jsonData = JSON.stringify(person);
+            //console.log(jsonData);
+            fetch('http://localhost:8080/user/new',{
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                mode:"no-cors",
+                body: jsonData
+            })
+            .then(response => response.json)
+            .catch(err => console.error(err))
+        }
+    </script>
+</body>
+</html>
