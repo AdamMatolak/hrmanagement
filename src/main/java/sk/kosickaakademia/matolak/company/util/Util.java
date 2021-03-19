@@ -10,6 +10,7 @@ import sk.kosickaakademia.matolak.company.enumerator.Gender;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Random;
 
 
 public class Util {
@@ -103,5 +104,19 @@ public class Util {
             return obj.toJSONString();
         }
         return null;
+    }
+    public String generateToken(){
+        // 40 znakov,male a velké písmená a čislice
+        String token="";
+        Random rnd = new Random();
+        for(int i = 0;i < 40;i++){
+            int x= rnd.nextInt(3);//0 velké, 1 malé, 2 cislo
+            switch (x){
+                case 0:token=token+(char)(rnd.nextInt(26)+65); break;
+                case 1:token=token+(char)(rnd.nextInt(26)+97); break;
+                case 2:token=token+(char)(rnd.nextInt(10)+48); break;
+            }
+        }
+        return token;
     }
 }
