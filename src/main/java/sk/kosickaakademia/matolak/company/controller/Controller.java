@@ -46,10 +46,6 @@ public class Controller {
             User user = new User(fname,lname,age,g.getValue());
             new Database().insertNewUser(user);
 
-            String newJoke = (String) object.get("user");
-            if (newJoke==null){
-                return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body("{}");
-            }
         } catch (Exception e) {
             log.error("Cannot process input data in /user/new controller");
             JSONObject obj = new JSONObject();
@@ -83,7 +79,7 @@ public class Controller {
     }
     @GetMapping("/users/age")
     public ResponseEntity<String> usersByAge(@RequestParam(value="from")int a,@RequestParam(value="to")int b) {
-        if (a > b) {
+        if (a > b || a < 1) {
             return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body("");
         }
         List<User> list = new Database().getUsersByAge(a, b);

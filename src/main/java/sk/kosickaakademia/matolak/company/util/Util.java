@@ -1,6 +1,5 @@
 package sk.kosickaakademia.matolak.company.util;
 
-import org.graalvm.compiler.lir.LIRInstruction;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,27 +16,26 @@ public class Util {
     public String getJson(List<User> list){
         /*  ak user==null   { }
             { "datetime":"1254-12-25..." , "size":1 , "users":[ { },{ },{ },{ } ] }
-
          */
-        if (list.isEmpty()) return "{}";
-
-        JSONObject object = new JSONObject();
-        object.put("datetime",getCurrentDateTime());
-        object.put("size",1);
-        JSONArray jsonArray = new JSONArray();
-        for (User u : list){
-            JSONObject userJson = new JSONObject();
-            userJson.put("id",u.getId());
-            userJson.put("fname",u.getFname());
-            userJson.put("lname",u.getLname());
-            userJson.put("age",u.getAge());
-            userJson.put("gender",u.getGender().toString());
-            jsonArray.add(userJson);
-
+        if (list != null) {
+            JSONObject object = new JSONObject();
+            object.put("datetime",getCurrentDateTime());
+            object.put("size",list.size());
+            JSONArray jsonArray = new JSONArray();
+            for (User u : list){
+                JSONObject userJson = new JSONObject();
+                userJson.put("id",u.getId());
+                userJson.put("fname",u.getFname());
+                userJson.put("lname",u.getLname());
+                userJson.put("age",u.getAge());
+                userJson.put("gender",u.getGender().toString());
+                jsonArray.add(userJson);
+            }
+            object.put("users",jsonArray);
+            return object.toJSONString();
+        }else {
+            return "{}";
         }
-        object.put("users",jsonArray);
-
-        return object.toJSONString();
     }
     public String getJson(User user){
         /*  ak user==null   { }

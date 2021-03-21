@@ -4,7 +4,6 @@ import sk.kosickaakademia.matolak.company.entity.User;
 import sk.kosickaakademia.matolak.company.log.Log;
 import sk.kosickaakademia.matolak.company.util.Util;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
@@ -33,6 +32,7 @@ public class Database {
             String password=props.getProperty("password");
             Connection con = DriverManager.getConnection(url, username, password);
             log.print("Connection: success!");
+            System.out.println("Connection navázáno");
             return con;
         }catch (Exception ex){
             log.error(ex.toString());

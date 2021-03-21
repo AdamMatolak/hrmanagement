@@ -20,7 +20,13 @@ public class SecretController {
     @GetMapping("/secret")
     public String secret(@RequestHeader("token") String header){
         System.out.println(header);
-        return "secret";
+        String token = header.substring(7);
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            if (entry.getValue().equalsIgnoreCase(token)){
+                return "secret";
+            }
+        }
+        return "150000";
     }
 
     @PostMapping("/login")
