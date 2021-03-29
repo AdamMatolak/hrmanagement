@@ -6,10 +6,13 @@ import org.json.simple.parser.ParseException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sk.kosickaakademia.matolak.company.database.DatabaseMySQL;
+import sk.kosickaakademia.matolak.company.entity.User;
 import sk.kosickaakademia.matolak.company.log.Log;
 import sk.kosickaakademia.matolak.company.util.Util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -75,6 +78,6 @@ public class SecretController {
                 log.error("Logout failed. User" + login + "does not exist");
             }
         }
-        return ResponseEntity.status(201).contentType(MediaType.APPLICATION_JSON).body("Success");
+        return ResponseEntity.status(201).contentType(MediaType.APPLICATION_JSON).body("Successfully logged out");
     }
 }

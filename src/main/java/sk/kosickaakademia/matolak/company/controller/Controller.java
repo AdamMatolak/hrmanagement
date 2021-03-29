@@ -6,7 +6,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sk.kosickaakademia.matolak.company.database.Database;
+import sk.kosickaakademia.matolak.company.database.DatabaseMySQL;
 import sk.kosickaakademia.matolak.company.entity.User;
 import sk.kosickaakademia.matolak.company.enumerator.Gender;
 import sk.kosickaakademia.matolak.company.log.Log;
@@ -44,7 +44,7 @@ public class Controller {
                 g=Gender.OTHER;
             }
             User user = new User(fname,lname,age,g.getValue());
-            new Database().insertNewUser(user);
+            new DatabaseMySQL().insertNewUser(user);
 
         } catch (Exception e) {
             log.error("Cannot process input data in /user/new controller");
@@ -57,7 +57,7 @@ public class Controller {
 
     @GetMapping("/users")
     public ResponseEntity<String> getAllUsers(){
-        List<User> list = new Database().getAllUsers();
+        List<User> list = new DatabaseMySQL().getAllUsers();
         String json = new Util().getJson(list);
         return ResponseEntity.status(201).contentType(MediaType.APPLICATION_JSON).body(json);
     }
@@ -65,12 +65,12 @@ public class Controller {
     @GetMapping("/users/{gender}")
     public ResponseEntity<String> getUsersByGender(@PathVariable String gender){
         if(gender=="male"){
-            List<User> list=new Database().getMales();
+            List<User> list=new DatabaseMySQL().getMales();
             String json = new Util().getJson(list);
             return ResponseEntity.status(201).contentType(MediaType.APPLICATION_JSON).body(json);
         }
         else if(gender=="female"){
-            List<User> list = new Database().getFemales();
+            List<User> list = new DatabaseMySQL().getFemales();
             String json = new Util().getJson(list);
             return ResponseEntity.status(201).contentType(MediaType.APPLICATION_JSON).body(json);
         }else {
@@ -82,7 +82,7 @@ public class Controller {
         if (a > b || a < 1) {
             return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body("");
         }
-        List<User> list = new Database().getUsersByAge(a, b);
+        List<User> list = new DatabaseMySQL().getUsersByAge(a, b);
         String json = new Util().getJson(list);
         return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
     }
@@ -104,7 +104,7 @@ public class Controller {
         if(newAge<1){
             return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body("");
         }
-        boolean result = new Database().changeAge(id,newAge);
+        boolean result = new DatabaseMySQL().changeAge(id,newAge);
         if(result){
             return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body("");
         }else{

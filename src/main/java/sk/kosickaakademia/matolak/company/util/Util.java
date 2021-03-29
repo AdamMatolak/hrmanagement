@@ -11,6 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
 
+import static jdk.nashorn.internal.parser.TokenType.XML;
+
 
 public class Util {
     public String getJson(List<User> list){
@@ -117,4 +119,5 @@ public class Util {
         }
         return token;
     }
+
 }
