@@ -20,4 +20,15 @@ import java.util.List;
         private static MongoDatabase db;
         private static Document document;
 
+        public void insertNewUser(User user){
+            db=mongoClient.getDatabase("myFirstDB");
+            document.append("fname", user.getFname());
+            document.append("lname", user.getLname());
+            document.append("age", user.getAge());
+            document.append("gender", user.getGender().getValue());
+            db.getCollection("users").insertOne(document);
+
+
+        }
+
     }
